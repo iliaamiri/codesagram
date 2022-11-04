@@ -3,12 +3,15 @@ import 'highlight.js/styles/stackoverflow-dark.css'
 
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
+import {SessionProvider} from "next-auth/react";
 TimeAgo.setDefaultLocale(en.locale)
 TimeAgo.addLocale(en)
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
-    <Component {...pageProps} />
+    <SessionProvider session={session}>
+      <Component {...pageProps} />
+    </SessionProvider>
   )
 }
 
