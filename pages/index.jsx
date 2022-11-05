@@ -1,28 +1,27 @@
 import Button from "../components/Button";
 import {useRouter} from "next/router";
-import {getUrlRequestUserGitHubIdentity} from "../lib/githubAuth";
+import { useSession, signIn, signOut } from "next-auth/react"
+import NavBar from "../components/NavBar";
 
 export default function Home() {
   const router = useRouter();
-
-  const handleLogin = () => {
-
-  }
+  const { data: session } = useSession()
 
   return (
-    <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
+      <>
+        <NavBar navigation={[
+            {name: "Home", href: "/", current: true},
+        ]} onSignIn={signIn} onSignOut={signOut} user={session?.user ?? null}  />
+        <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
 
-      <div className='max-w-2xl mx-auto'>
+          <div className='max-w-2xl mx-auto'>
 
-        <h1 className="text-3xl font-extrabold tracking-tight text-gray-100 sm:text-4xl">
-          <span className="block">Welcome to</span>
-          <span className="block text-indigo-300">Your Assignment</span>
-          <Button onClick={() => router.push(getUrlRequestUserGitHubIdentity())}>
-            Click Me
-          </Button>
-        </h1>
+            <h1 className="text-3xl font-extrabold tracking-tight text-gray-100 sm:text-4xl">
+                <Button onClick={() => router.push('/posts/create')}>Create new Post</Button>
+            </h1>
 
-      </div>
-    </div>
+          </div>
+        </div>
+      </>
   )
 }

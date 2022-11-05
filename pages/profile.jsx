@@ -1,19 +1,13 @@
 import { useSession, signIn, signOut } from "next-auth/react"
+import NavBar from "../components/NavBar";
 export default function Profile() {
   const { data: session } = useSession()
-  if (session) {
-    return (
-      <>
-        <img src={session.user.image} alt="" />
-        Signed in as {session.user.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
-    )
-  }
+
   return (
     <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
+        <NavBar navigation={[
+            {name: "Home", href: "/", current: true},
+        ]} onSignIn={signIn} onSignOut={signOut} user={session?.user ?? null}  />
     </>
   )
 }
