@@ -2,10 +2,9 @@
 import NextAuth from "next-auth"
 import GitHubProvider from "next-auth/providers/github"
 import GoogleProvider from "next-auth/providers/google"
-import crypto from "crypto"
 
-export default NextAuth({
-  secret: crypto.randomBytes(48).toString('hex'),
+export const authOptions = {
+  secret: process.env.OAUTH_NEXT_SECRET,
   providers: [
     GitHubProvider({
       clientId: process.env.NEXT_PUBLIC_GITHUB_ID,
@@ -16,4 +15,6 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_SECRET
     })
   ],
-})
+}
+
+export default NextAuth(authOptions)

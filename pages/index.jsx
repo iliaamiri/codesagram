@@ -11,13 +11,14 @@ export default function Home() {
       <>
         <NavBar navigation={[
             {name: "Home", href: "/", current: true},
+            {name: "Posts", href: "/posts", current: false},
         ]} onSignIn={signIn} onSignOut={signOut} user={session?.user ?? null}  />
         <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
 
           <div className='max-w-2xl mx-auto'>
 
             <h1 className="text-3xl font-extrabold tracking-tight text-gray-100 sm:text-4xl">
-                <Button onClick={() => router.push('/posts/create')}>Create new Post</Button>
+                Welcome to my assignment 3
             </h1>
 
           </div>
