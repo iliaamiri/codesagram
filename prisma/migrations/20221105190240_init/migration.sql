@@ -16,6 +16,7 @@ CREATE TABLE `Post` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
+    `postTitle` VARCHAR(191) NOT NULL,
     `code` VARCHAR(191) NOT NULL,
     `language` VARCHAR(191) NULL,
     `authorId` INTEGER NOT NULL,
