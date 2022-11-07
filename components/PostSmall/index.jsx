@@ -8,7 +8,7 @@ import highlight from "../../utils/highlight"
 
 import { twMerge } from "tailwind-merge"
 
-export default function PostSmall({ onLike, onComment, onShare, href, post, user, Image = NextImage, Link = NextLink, className = "" }) {
+export default function PostSmall({ onLike, onComment, onShare, href, post, liked, user, Image = NextImage, Link = NextLink, className = "" }) {
 
   return (
     <div className={twMerge('lex flex-col overflow-hidden rounded-lg shadow-lg', className)}>
@@ -38,7 +38,7 @@ export default function PostSmall({ onLike, onComment, onShare, href, post, user
                 </div>
                 <div className="flex-1 mt-1">
                   <p className="text-xl font-semibold text-gray-100">
-                    {post.title.substring(0, 50)}
+                    {post.postTitle.substring(0, 50)}
                   </p>
 
                 </div>
@@ -54,7 +54,14 @@ export default function PostSmall({ onLike, onComment, onShare, href, post, user
         </Link>
       </div>
       <div className="flex flex-col items-center pb-3">
-        <PostActions onComment={onComment} onLike={onLike} onShare={onShare} liked={post.liked} totalComments={post.totalComments} totalLikes={post.totalLikes} />
+        <PostActions
+            post={post}
+            onComment={onComment}
+            onLike={onLike}
+            onShare={onShare}
+            liked={liked}
+            totalComments={post.comments.length}
+            totalLikes={post.postLikes.length} />
       </div>
 
     </div>

@@ -1,12 +1,12 @@
 import NavBar from "../NavBar"
 import { useRouter } from 'next/router'
 import { PlusCircleIcon } from '@heroicons/react/24/outline'
+import {signIn, signOut} from "next-auth/react";
 
-export default function SiteNavigation() {
-
+export default function SiteNavigation({user}) {
   const router = useRouter()
   const navigation = [
-    { name: 'New', Icon: PlusCircleIcon, href: '/addPost', current: router.pathname === '/addPost' },
+    { name: 'New', Icon: PlusCircleIcon, href: '/posts/create', current: router.pathname === '/posts/create' },
   ]
 
   const handleSearch = (text) => {
@@ -15,6 +15,6 @@ export default function SiteNavigation() {
 
 
   return (
-    <NavBar navigation={navigation} onSearch={handleSearch} />
+    <NavBar navigation={navigation} onSearch={handleSearch} onSignIn={signIn} onSignOut={signOut} user={user} />
   )
 }

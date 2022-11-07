@@ -4,7 +4,6 @@ import {signIn, signOut} from "next-auth/react";
 import NavBar from "../../../components/NavBar";
 import {unstable_getServerSession} from "next-auth";
 import {authOptions} from "../../api/auth/[...nextauth]";
-import {postsRepository} from "../../../lib/posts/repository";
 import {stringyAndParser} from "../../../lib/helpers";
 import {usersRepository} from "../../../lib/users/repository";
 import Post from "../../../components/Post";
@@ -107,11 +106,9 @@ export default function ViewPost({ user }) {
 
 export async function getServerSideProps(context) {
     const session = await unstable_getServerSession(context.req, context.res, authOptions)
-    const posts = await postsRepository.getAll()
-    console.log(posts)
     return {
         props: {
-            user: (session?.user) ? stringyAndParser(await usersRepository.saveToDbFromSession(session.user)) : null
+            user: (session?.user) ? stringyAndParser(await usersRepository.getUserByEmail(session.user.email)) : null
         },
     }
 }

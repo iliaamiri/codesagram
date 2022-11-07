@@ -11,7 +11,7 @@ export default async function handler(req, res) {
             return
         }
 
-        const user = await usersRepository.saveToDbFromSession(session.user)
+        const user = await usersRepository.getUserByEmail(session.user.email)
 
         // Process a POST request
         const { postId } = req.body

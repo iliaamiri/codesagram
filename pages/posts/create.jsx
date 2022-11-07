@@ -3,16 +3,20 @@ import NavBar from "../../components/NavBar";
 import NewPostForm from "../../components/NewPostForm";
 import {useState} from "react";
 import axios from "axios";
+import {useRouter} from "next/router";
+import SiteNavigation from "../../components/SiteNavigation";
 
 export default function CreatePost() {
     const { data: session } = useSession()
+
+    const router = useRouter();
 
     const [code, setCode] = useState("")
 
     const handleSubmit = async () => {
         try {
             const result = await axios.post("/api/posts/create", {code})
-            console.log(result)
+            await router.push(`/posts/view/${result.data.id}`)
         } catch (e) {
             console.log(e)
         }
@@ -20,10 +24,7 @@ export default function CreatePost() {
 
     return (
         <>
-            <NavBar navigation={[
-                {name: "Home", href: "/", current: false},
-                {name: "Posts", href: "/posts", current: false},
-            ]} onSignIn={signIn} onSignOut={signOut} user={session?.user ?? null}  />
+            <SiteNavigation user={session?.user ?? null} />
 
             <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
                 <div className='max-w-2xl mx-auto'>
@@ -37,12 +38,3 @@ export default function CreatePost() {
         </>
     )
 }
-//
-// // A little love letter to anonymous
-// namespace Love;
-//
-// class Main {
-//     public Main(string[] args) {
-//     Console.WriteLine("I Love You");
-// }
-// }
