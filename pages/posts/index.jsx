@@ -1,16 +1,49 @@
 import NavBar from "../../components/NavBar";
 import {signIn, signOut, useSession} from "next-auth/react";
-import {postsRepository} from "../../lib/posts/repository";
 import Post from "../../components/Post";
 import {unstable_getServerSession} from "next-auth";
 import {authOptions} from "../api/auth/[...nextauth]";
 import {usersRepository} from "../../lib/users/repository";
 import {stringyAndParser} from "../../lib/helpers";
 import Button from "../../components/Button";
+import {useRouter} from "next/router";
+import axios from "axios";
+import {useEffect, useState} from "react";
 
-export default function PostsIndex({ posts, user }) {
+export default function PostsIndex({ user }) {
+    const router = useRouter()
 
+    const [posts, setPosts] = useState()
 
+    const likeHandler = async (postId) => {
+        try {
+            const result = await axios.post("/api/posts/like", {postId})
+            console.log(result)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const commentHandler = async (postId) => {
+        await router.push(`/posts/view/${postId}`)
+    }
+
+    const shareHandler = async (postId) => {
+
+    }
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const result = await axios.get("/api/posts")
+                console.log(result)
+                setPosts(() => [...result.data])
+            } catch (e) {
+                console.log(e)
+            }
+
+        })()
+    }, [])
 
     return (
         <>
@@ -24,13 +57,40 @@ export default function PostsIndex({ posts, user }) {
                     <h1 className="text-3xl font-extrabold tracking-tight text-gray-100 sm:text-4xl">
                         Posts
                     </h1>
-                    <Button onClick={() => router.push('/posts/create')}>Create new Post</Button>
+                    <Button className={'mb-10'} onClick={() => router.push('/posts/create')}>Create new Post</Button>
 
-                    {posts?.map((post) => (
-                        <Post key={post.id} post={post} user={post.author} liked={user && post.postLikes.some(p => p.authorId === user.id)} />
-                    ))}
+                    {
+                        Array.isArray(posts) ? (
+                            <>
+                                {
+                                    posts.length > 0 ? (
+                                        <>
+                                            {
+                                                posts.map((post) => (
+                                                    <Post
+                                                        key={post.id}
+                                                        post={post}
+                                                        user={post.author}
+                                                        liked={user && post.postLikes.some(p => p.authorId === user.id)}
+                                                        onLike={likeHandler}
+                                                        onComment={commentHandler}
+                                                        onShare={shareHandler} />
+                                                ))
+                                            }
+                                        </>
+                                    ) :
+                                        <p>No posts yet</p>
+                                }
+                            </>
+                        ) :
+                            (
+                                <div className="text-center">
+                                    <p className="text-2xl font-bold">Loading...</p>
+                                </div>
+                            )
+                    }
+
                 </div>
-
             </div>
         </>
     )
@@ -38,11 +98,8 @@ export default function PostsIndex({ posts, user }) {
 
 export async function getServerSideProps(context) {
     const session = await unstable_getServerSession(context.req, context.res, authOptions)
-    const posts = await postsRepository.getAll()
-    console.log(posts)
     return {
         props: {
-            posts: JSON.parse(JSON.stringify(posts)),
             user: (session?.user) ? stringyAndParser(await usersRepository.saveToDbFromSession(session.user)) : null
         },
     }

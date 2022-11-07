@@ -55,6 +55,7 @@ export default function Post({ onComment, onLike, onShare, liked, post, user, cl
           className="mt-6 mb-3"
           onComment={onComment}
           onLike={onLike}
+          post={post}
           onShare={onShare}
           liked={liked}
           totalComments={post.comments.length}

@@ -12,7 +12,7 @@ export default function Comments({ comments, className }) {
           className="px-6"
             key={comment.id}
             comment={comment}
-            user={comment.user}
+            user={comment.author}
           />
         </li>
       ))}
