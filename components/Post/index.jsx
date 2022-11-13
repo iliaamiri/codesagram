@@ -2,8 +2,8 @@ import Image from "next/image"
 
 import PostActions from "../PostActions"
 
-import formatTimeAgo from "../../utils/formatTimeAgo"
-import highlight from "../../utils/highlight"
+import formatTimeAgo from "../../lib/utils/formatTimeAgo"
+import highlight from "../../lib/utils/highlight"
 
 import { twMerge } from "tailwind-merge"
 
@@ -33,7 +33,7 @@ export default function Post({ onComment, onLike, onShare, liked, post, user, cl
           </div>
           <div className="flex-1 mt-1">
             <p className="text-xl font-semibold text-gray-100">
-              {post.title}
+              {post.postTitle}
             </p>
           </div>
         </div>

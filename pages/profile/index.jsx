@@ -1,6 +1,4 @@
 import {useRouter} from "next/router";
-import { signIn, signOut } from "next-auth/react"
-import NavBar from "../../components/NavBar";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {unstable_getServerSession} from "next-auth";
@@ -11,7 +9,7 @@ import Post from "../../components/Post";
 import Comments from "../../components/Comments";
 import SiteNavigation from "../../components/SiteNavigation";
 
-export default function Profile({ user }) {
+export default function Profile({ user, host }) {
     const router = useRouter();
 
     const [posts, setPosts] = useState(undefined)
@@ -31,7 +29,7 @@ export default function Profile({ user }) {
     }
 
     const shareHandler = async (postId) => {
-
+        await navigator.clipboard.writeText(`http://${host}/posts/view/${postId}`)
     }
 
     useEffect(() => {
@@ -39,7 +37,10 @@ export default function Profile({ user }) {
             try {
                 const result = await axios.get("/api/user/profile")
                 const {data} = result
-                setPosts([...data.posts])
+                setPosts(() => {
+                    data.posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                    return [...data.posts]
+                })
                 setComments([...data.comments])
             } catch (e) {
                 console.log(e)
@@ -118,7 +119,8 @@ export async function getServerSideProps(context) {
     const session = await unstable_getServerSession(context.req, context.res, authOptions)
     return {
         props: {
-            user: (session?.user) ? stringyAndParser(await usersRepository.getUserByEmail(session.user.email)) : null
+            user: (session?.user) ? stringyAndParser(await usersRepository.getUserByEmail(session.user.email)) : null,
+            host: context.req.headers.host
         },
     }
 }

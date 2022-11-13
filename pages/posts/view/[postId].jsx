@@ -10,6 +10,7 @@ import Post from "../../../components/Post";
 import axios from "axios";
 import CommentForm from "../../../components/CommentForm";
 import Comments from "../../../components/Comments";
+import SiteNavigation from "../../../components/SiteNavigation";
 
 export default function ViewPost({ user }) {
     const router = useRouter();
@@ -66,10 +67,7 @@ export default function ViewPost({ user }) {
 
     return (
         <>
-            <NavBar navigation={[
-                {name: "Home", href: "/", current: false},
-                {name: "Posts", href: "/posts", current: true},
-            ]} onSignIn={signIn} onSignOut={signOut} user={user ?? null}  />
+            <SiteNavigation user={user ?? null} />
 
             <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
                 <div className='max-w-2xl mx-auto'>

@@ -3,8 +3,8 @@ import NextImage from "next/image"
 
 import PostActions from "../PostActions"
 
-import formatTimeAgo from "../../utils/formatTimeAgo"
-import highlight from "../../utils/highlight"
+import formatTimeAgo from "../../lib/utils/formatTimeAgo"
+import highlight from "../../lib/utils/highlight"
 
 import { twMerge } from "tailwind-merge"
 

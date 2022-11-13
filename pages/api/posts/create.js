@@ -11,13 +11,13 @@ export default async function handler(req, res) {
         }
 
         // Process a POST request
-        const { code } = req.body
-        if (!code) {
-            res.status(400).send({error: 'No code provided'})
+        const { code, language } = req.body
+        if (!code || !language) {
+            res.status(400).send({error: 'Bad request'})
             return
         }
 
-        const createdPost = await postsRepository.createPost({user: session.user, code})
+        const createdPost = await postsRepository.createPost({user: session.user, code, language})
         console.log(createdPost)
 
         res.status(200).json(createdPost)

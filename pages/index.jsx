@@ -1,5 +1,3 @@
-import NavBar from "../components/NavBar";
-import {signIn, signOut} from "next-auth/react";
 import {unstable_getServerSession} from "next-auth";
 import {authOptions} from "./api/auth/[...nextauth]";
 import {usersRepository} from "../lib/users/repository";
@@ -11,17 +9,16 @@ import {useEffect, useState} from "react";
 import PostSmall from "../components/PostSmall";
 import SiteNavigation from "../components/SiteNavigation";
 
-export default function PostsIndex({ user }) {
+export default function PostsIndex({ user, host }) {
     const router = useRouter()
 
     const [posts, setPosts] = useState()
 
     const likeHandler = async (postId) => {
         try {
-            const result = await axios.post("/api/posts/like", {postId})
-            console.log(result)
+            await axios.post("/api/posts/like", {postId})
         } catch (e) {
-            console.log(e)
+            console.error(e)
         }
     }
 
@@ -30,19 +27,20 @@ export default function PostsIndex({ user }) {
     }
 
     const shareHandler = async (postId) => {
-
+        await navigator.clipboard.writeText(`http://${host}/posts/view/${postId}`)
     }
 
     useEffect(() => {
         (async () => {
             try {
                 const result = await axios.get("/api/posts")
-                console.log(result)
-                setPosts(() => [...result.data])
+                setPosts(() => {
+                    result.data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                    return [...result.data]
+                })
             } catch (e) {
-                console.log(e)
+                console.error(e)
             }
-
         })()
     }, [])
 
@@ -99,7 +97,8 @@ export async function getServerSideProps(context) {
     const session = await unstable_getServerSession(context.req, context.res, authOptions)
     return {
         props: {
-            user: (session?.user) ? stringyAndParser(await usersRepository.getUserByEmail(session.user.email)) : null
+            user: (session?.user) ? stringyAndParser(await usersRepository.getUserByEmail(session.user.email)) : null,
+            host: context.req.headers.host
         },
     }
 }

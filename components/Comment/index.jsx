@@ -1,6 +1,6 @@
 import Image from "next/image"
 
-import formatTimeAgo from "../../utils/formatTimeAgo"
+import formatTimeAgo from "../../lib/utils/formatTimeAgo"
 
 export default function Comment({ comment, user, className }) {
   return (
